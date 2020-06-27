@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:r3tr0/ui/paint/cabinet_front.dart';
 
 void main() {
   runApp(MyApp());
@@ -29,9 +30,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(),
       body: Center(
-        child: Text(
-          'Let\'s Start!',
-        ),
+        child: Cabinet(),
       ),
     );
   }
