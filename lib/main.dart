@@ -13,15 +13,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-          body: Center(
-              child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-//          Dials(),
-          Dialer()
-        ],
-      ))),
+        body: Center(child: Dialer()),
+      ),
     );
   }
 }

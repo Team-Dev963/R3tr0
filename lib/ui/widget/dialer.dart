@@ -1,6 +1,10 @@
-import 'dart:math' show pi, sin, cos, sqrt, pow, asin;
+import 'dart:math' show pi, sin, cos, sqrt, pow, atan2;
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
+
+euclideanDist(Offset a, Offset b) {
+  return sqrt(pow((a.dx - b.dx), 2) + pow((a.dy - b.dy), 2));
+}
 
 class Dialer extends StatefulWidget {
   @override
@@ -8,64 +12,80 @@ class Dialer extends StatefulWidget {
 }
 
 class _DialerState extends State<Dialer> with TickerProviderStateMixin {
+  Offset center = Offset.zero;
   AnimationController _controller;
-  double oriX;
-  double curX;
-  double oriY;
-  double curY;
-  double angle = 0;
-  double rad;
 
-  getRadFromCoOrd() {
-    double dist = sqrt(pow((curX - oriX), 2) + pow((curY - oriY), 2));
-    rad = 2 * asin(dist / 210);
-    setState(() {
-      angle = 4 * rad;
-    });
+  double oriX;
+  double oriY;
+
+  double curX;
+  double curY;
+
+  double angle = 0;
+
+  updateAngle() {
+    var origAngle = atan2(oriY - center.dy, oriX - center.dx);
+    var curAngle = atan2(curY - center.dy, curX - center.dx);
+    angle = curAngle - origAngle;
   }
 
   @override
   void initState() {
     super.initState();
-    _controller =
-        AnimationController(vsync: this, value: 0.0, duration: Duration(milliseconds: 800))
-          ..addListener(() {
-            setState(() {
-              angle = _controller.value * 8;
-            });
-          });
+    _controller = AnimationController(
+      vsync: this,
+      duration: Duration(seconds: 1),
+      value: 0.0,
+      lowerBound: -pi,
+      upperBound: pi,
+    );
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      center =
+          Offset(MediaQuery.of(context).size.width / 2, MediaQuery.of(context).size.height / 2);
+      print(center);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: CustomPaint(
-        painter: DialerBackGroundPainter(width: 300),
-        child: Container(
-          width: 300,
-          height: 300,
-          child: AnimatedBuilder(
-            animation: _controller,
-            builder: (context, child) {
-              return Transform.rotate(angle: angle, child: child);
-            },
-            child: GestureDetector(
-              onVerticalDragStart: (dragStart) {
-                oriX = dragStart.globalPosition.dx;
-                oriY = dragStart.globalPosition.dy;
-              },
-              onVerticalDragUpdate: (dragUpdate) {
-                curX = dragUpdate.globalPosition.dx;
-                curY = dragUpdate.globalPosition.dy;
-                if (((curX - oriX) < 200) && ((curY - oriY) < 200)) {
-                  if ((curX - oriX) > 0) {
-                    getRadFromCoOrd();
-                  }
-                }
-              },
-              onVerticalDragEnd: (_) {
-                _controller.value = rad / 2;
-                _controller.animateTo(0);
+      child: GestureDetector(
+        onVerticalDragStart: (dragStart) {
+          oriX = dragStart.globalPosition.dx;
+          oriY = dragStart.globalPosition.dy;
+        },
+        onVerticalDragUpdate: (dragUpdate) {
+          curX = dragUpdate.globalPosition.dx;
+          curY = dragUpdate.globalPosition.dy;
+          updateAngle();
+          _controller.animateTo(angle);
+        },
+        onHorizontalDragStart: (dragStart) {
+          oriX = dragStart.globalPosition.dx;
+          oriY = dragStart.globalPosition.dy;
+        },
+        onHorizontalDragUpdate: (dragUpdate) {
+          curX = dragUpdate.globalPosition.dx;
+          curY = dragUpdate.globalPosition.dy;
+          updateAngle();
+          _controller.animateTo(angle);
+        },
+        onHorizontalDragEnd: (_) {
+          _controller.animateTo(0);
+        },
+        onVerticalDragEnd: (_) {
+          _controller.animateTo(0);
+        },
+        child: CustomPaint(
+          painter: DialerBackGroundPainter(width: 300),
+          child: Container(
+            width: 300,
+            height: 300,
+            child: AnimatedBuilder(
+              animation: _controller,
+              builder: (context, child) {
+                print('angle: ${_controller.value}');
+                return Transform.rotate(angle: _controller.value, child: child);
               },
               child: Image.asset(
                 'assets/images/dial.png',
@@ -102,7 +122,6 @@ class DialerBackGroundPainter extends CustomPainter {
     );
     for (var i = 1; i <= 10; i++) {
       Offset center = getCenterPos(i);
-      print(center);
       var x = ui.ParagraphBuilder(ui.ParagraphStyle(
         textAlign: TextAlign.center,
         fontSize: 20,
