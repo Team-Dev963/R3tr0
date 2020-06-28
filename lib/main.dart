@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:r3tr0/ui/paint/cabinet_front.dart';
+import 'package:r3tr0/ui/widget/cabinet.dart';
 
 void main() {
   runApp(MyApp());
@@ -27,9 +27,8 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(),
-      body: Center(
+    return Material(
+      child: SafeArea(
         child: Cabinet(),
       ),
     );
