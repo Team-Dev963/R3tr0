@@ -38,7 +38,7 @@ class HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-    widget.storage.readFileData("random","txt").then((dynamic value) {
+    widget.storage.readFileData("random", "txt").then((dynamic value) {
       setState(() {
         state = value.toString();
       });
@@ -51,7 +51,7 @@ class HomeState extends State<Home> {
       controller.text = '';
     });
 
-    return widget.storage.writeFileData("random","txt",state);
+    return widget.storage.writeFileData("random", "txt", state);
   }
 
   void getAppDirectory() {
@@ -84,8 +84,7 @@ class HomeState extends State<Home> {
             ),
             FutureBuilder<Directory>(
               future: _appDocDir,
-              builder:
-                  (BuildContext context, AsyncSnapshot<Directory> snapshot) {
+              builder: (BuildContext context, AsyncSnapshot<Directory> snapshot) {
                 Text text = Text('');
                 if (snapshot.connectionState == ConnectionState.done) {
                   if (snapshot.hasError) {

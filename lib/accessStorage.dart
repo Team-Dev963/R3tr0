@@ -1,9 +1,12 @@
 import 'dart:io';
 import 'dart:async';
 
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:path_provider/path_provider.dart';
 
 class AccessStorage {
+  static List<String> allowedExtensions = ['txt', 'png', 'jpg', 'jpeg', 'gif', 'svg'];
 
   // Will get the path where files are going to be stored
   Future<String> get localPath async {
@@ -22,6 +25,7 @@ class AccessStorage {
       case "svg":
       case "gif":
       case "jpeg":
+      case "jpg":
         return File('$path/images/$name.$ext');
         break;
       default:
@@ -41,15 +45,20 @@ class AccessStorage {
         case "svg":
         case "gif":
         case "jpeg":
-          // todo for IMAGES
+        case "jpg":
+          return Image.file(file);
           break;
         default:
-          // todo for OTHERS
+        // todo for OTHERS|
       }
       return "tmp";
     } catch (e) {
       return e.toString();
     }
+  }
+
+  Future<File> getLocalFile() async {
+    return await FilePicker.getFile(allowedExtensions: allowedExtensions);
   }
 
   Future<dynamic> writeFileData(String name, String ext, dynamic content) async {
@@ -57,21 +66,22 @@ class AccessStorage {
       final file = await getFile(name, ext);
       switch (ext) {
         case "txt":
-          return file.writeAsString("$content");
+          await file.writeAsString("$content");
           break;
         case "png":
         case "svg":
         case "gif":
         case "jpeg":
-          // todo for IMAGES
+          if (content is File) {
+            await file.writeAsBytes(await content.readAsBytes());
+          }
           break;
         default:
-          // todo for OTHERS
+        // todo for OTHERS
       }
       return "tmp";
     } catch (e) {
       return e.toString();
     }
   }
-
 }
