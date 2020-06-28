@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:r3tr0/ui/widget/dialer.dart';
 
 void main() {
   runApp(MyApp());
@@ -17,7 +18,8 @@ class MyApp extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Dials(),
+//          Dials(),
+          Dialer()
         ],
       ))),
     );
@@ -29,7 +31,7 @@ class Dials extends StatefulWidget {
   _DialsState createState() => _DialsState();
 }
 
-class _DialsState extends State<Dials> with SingleTickerProviderStateMixin {
+class _DialsState extends State<Dials> with TickerProviderStateMixin {
   AnimationController _controller;
   double oriX;
   double curX;
@@ -50,13 +52,12 @@ class _DialsState extends State<Dials> with SingleTickerProviderStateMixin {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _controller =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 800))
-          ..addListener(() {
-            setState(() {
-              angle = _controller.value*8;
-            });
-          });
+    _controller = AnimationController(vsync: this, duration: Duration(milliseconds: 800))
+      ..addListener(() {
+        setState(() {
+          angle = _controller.value * 8;
+        });
+      });
     _controller.value = 0;
   }
 
@@ -67,8 +68,7 @@ class _DialsState extends State<Dials> with SingleTickerProviderStateMixin {
       child: Container(
         height: 200,
         width: 200,
-        decoration: BoxDecoration(
-            color: Colors.lightBlueAccent, shape: BoxShape.circle),
+        decoration: BoxDecoration(color: Colors.lightBlueAccent, shape: BoxShape.circle),
         alignment: Alignment.topCenter,
         child: GestureDetector(
           onVerticalDragStart: (Dragstart) {
@@ -85,14 +85,13 @@ class _DialsState extends State<Dials> with SingleTickerProviderStateMixin {
             }
           },
           onVerticalDragEnd: (noneed) {
-            _controller.value = rad/2;
+            _controller.value = rad / 2;
             _controller.animateTo(0);
           },
           child: Container(
             height: 40,
             width: 40,
-            decoration:
-                BoxDecoration(color: Colors.black, shape: BoxShape.circle),
+            decoration: BoxDecoration(color: Colors.black, shape: BoxShape.circle),
           ),
         ),
       ),
