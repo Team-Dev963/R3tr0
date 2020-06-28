@@ -29,7 +29,7 @@ class _CabinetState extends State<Cabinet> with TickerProviderStateMixin {
     for (var i = 0; i < 2; i++) {
       if (i != openIndex)
         list.add(Positioned(
-          top: (i + 1) * 64.0,
+          top: i * 64.0 + 32.0,
           child: CabinetDrawer(
               index: i,
               animation: _controllers[i],
@@ -59,7 +59,7 @@ class _CabinetState extends State<Cabinet> with TickerProviderStateMixin {
     if (openIndex != null) {
       list.add(
         Positioned(
-          top: (openIndex + 1) * 64.0,
+          top: openIndex * 64.0 + 32.0,
           child: AnimatedBuilder(
             animation: _controllers[openIndex],
             builder: (context, child) {
@@ -73,7 +73,7 @@ class _CabinetState extends State<Cabinet> with TickerProviderStateMixin {
         ),
       );
       list.add(Positioned(
-        top: (openIndex + 1) * 64.0,
+        top: openIndex * 64.0 + 32.0,
         child: CabinetDrawer(
             index: openIndex,
             animation: _controllers[openIndex],
@@ -109,13 +109,13 @@ class _CabinetState extends State<Cabinet> with TickerProviderStateMixin {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 40.0),
       child: CustomPaint(
-        painter: CabinetBodyPainter(2, Size(200, 64)),
+        painter: CabinetBodyPainter(2, Size(200, 32), 64),
         child: Stack(
           children: [
             CustomPaint(
-              size: Size(200, 64),
+              size: Size(200, 32),
               painter: CabinetTopPainter(),
-              child: Container(width: 200, height: 64),
+              child: Container(width: 200, height: 32),
             ),
             ...getChildren()
           ],

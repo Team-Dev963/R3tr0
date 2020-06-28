@@ -4,15 +4,16 @@ import 'package:flutter/material.dart';
 class CabinetBodyPainter extends CustomPainter {
   final int items;
   final Size size;
+  final double itemHeight;
 
-  CabinetBodyPainter(this.items, this.size);
+  CabinetBodyPainter(this.items, this.size, this.itemHeight);
 
   Path path(Size size) => Path()
     ..moveTo(size.width / 2 - 50, 0)
     ..lineTo(size.width / 2 + 50, 0)
     ..lineTo(size.width, size.height)
-    ..lineTo(size.width, size.height * (items + 1) + 2)
-    ..lineTo(0, size.height * (items + 1) + 2)
+    ..lineTo(size.width, size.height + items * itemHeight + 2)
+    ..lineTo(0, size.height + items * itemHeight + 2)
     ..lineTo(0, size.height)
     ..close();
 
